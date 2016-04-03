@@ -1,0 +1,5 @@
+Caminho longo (254+ caracteres)
+Nome duplicado
+Caminhos redundantes
+Ajuste de nome de arquivo
+Sugestão de caminho
