@@ -44,7 +44,7 @@ int loop(int menu) {
 	return menu;
 }
 
-void main() {
+void main1() {
 	int menu = 0;
 
 	switch (menu) {
