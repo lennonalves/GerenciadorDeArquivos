@@ -6,15 +6,52 @@
 #include <iostream>
 #include <string>
 
+#include <sys/types.h>
+#include "dirent.h"
+
 using namespace std;
 
 void saida() {
-	cout << "Obrigado por utilizar nosso sistema.";
-	cout << "Dúvidas ou Sugestões? Envie email para: lennonalvesdias@gmail.com";
+	system("cls");
+	cout << "Obrigado por utilizar nosso sistema." << endl;
+	cout << "Duvidas ou Sugestoes? Envie email para: lennonalvesdias@gmail.com\n" << endl;
 	exit(0);
 }
 
+void regrasNomeArquivo(string nomeArquivo) {
+	cout << "Regra 01: Nome com espacos" << endl;
+	cout << "Regra 02: Nome com caracteres especiais" << endl;
+
+	//Regra 01
+	for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it)
+		if (*it == *" ")
+			cout << "entrou" << endl;
+
+	//Regra 02
+}
+
+void listaDiretorio() {
+	system("cls");
+	cout << "Arquivos do diretorio:\n" << endl;
+	DIR *dp;
+	struct dirent *ep;
+
+	dp = opendir("./");
+	if (dp != NULL)
+	{
+		while (ep = readdir(dp))
+			puts(ep->d_name);
+
+		(void)closedir(dp);
+	}
+	else
+		perror("Erro ao listar diretorio.\n\n");
+}
+
 void verificaNome() {
+	system("cls");
+	cout << "[4] Verificar nome do arquivo\n" << endl;
+
 	/*
 	FILE	*arquivoEntrada, *arquivoSaida;
 	
@@ -24,29 +61,45 @@ void verificaNome() {
 	fclose(arquivoSaida);
 	*/
 
-	string caminho;
+	string nomeArquivo;
 
-	cout << "[4] Verificar nome do arquivo";
-	cout << "Informe o caminho do arquivo";
-	cin >> caminho;
-	cout << caminho;
+	int menu = 0;
+	cout << "Selecione a opcao desejada:" << endl;
+	cout << "[1] Verificar todos os arquivos" << endl;
+	cout << "[2] Verificar unico arquivo" << endl;
+	cout << "[0] Sair\n" << endl;
+	cin.ignore(); cin >> menu;
+
+	if (menu != 1 && menu != 2) saida();
+	else if (menu == 1) {
+		cout << "\nVerificando todos os arquivos." << endl;
+	}
+	else {
+		listaDiretorio();
+		cout << "\nInforme o nome do arquivo: ";
+		cin.ignore(); getline(cin, nomeArquivo);
+		cout << "\nArquivo informado: " << nomeArquivo << endl;
+		regrasNomeArquivo(nomeArquivo);
+	}
 }
 
 int loop(int menu) {
-	cout << "Selecione a opção desejada:";
-	cout << "[1] Verificar tamanho do caminho do arquivo"; // não implementado
-	cout << "[2] Verificar arquivos com nomes duplicados"; // não implementado
-	cout << "[3] Verificar caminhos redundantes"; // não implementado
-	cout << "[4] Verificar nome do arquivo"; // em desenvolvimento
-	cout << "[5] Sugestão de caminho"; // não implementado
-	cout << "[0] Sair";
+	system("cls");
+	cout << "Selecione a opcao desejada:" << endl;
+	cout << "[1] Verificar tamanho do caminho do arquivo" << endl; // não implementado
+	cout << "[2] Verificar arquivos com nomes duplicados" << endl; // não implementado
+	cout << "[3] Verificar caminhos redundantes" << endl; // não implementado
+	cout << "[4] Verificar nome do arquivo" << endl; // em desenvolvimento
+	cout << "[5] Sugestao de caminho" << endl; // não implementado
+	cout << "[0] Sair\n" << endl;
 	cin >> menu;
 	return menu;
 }
 
-void main1() {
+void main() {
 	int menu = 0;
 
+	menu = loop(menu);
 	switch (menu) {
 	case 0: saida(); break;
 	case 1: break;
@@ -55,6 +108,4 @@ void main1() {
 	case 4: verificaNome(); break;
 	case 5: break;
 	}
-
-	system("pause");
 }

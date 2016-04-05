@@ -3,7 +3,7 @@
 #include "dirent.h"
 
 int
-main(void)
+diretorios(void)
 {
 	DIR *dp;
 	struct dirent *ep;
@@ -19,6 +19,5 @@ main(void)
 	else
 		perror("Couldn't open the directory");
 
-	system("pause");
 	return 0;
 }
