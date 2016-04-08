@@ -19,13 +19,32 @@ void saida() {
 }
 
 void regrasNomeArquivo(string nomeArquivo) {
-	cout << "Regra 01: Nome com espacos" << endl;
+	system("cls");
+	cout << "Arquivo informado: " << nomeArquivo << endl;
+	cout << "\nRegra 01: Nome com espacos" << endl;
 	cout << "Regra 02: Nome com caracteres especiais" << endl;
+	int letras = 1; char *nomeTemp = NULL, *nomeFinal;
 
 	//Regra 01
-	for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it)
-		if (*it == *" ")
-			cout << "entrou" << endl;
+	for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it) {
+		if (*it != *" ") {
+			//cout << "letra: " << *it << endl;
+			nomeTemp = (char*)realloc(nomeTemp, letras * sizeof(char));
+			nomeTemp[letras-1] = *it;
+			//cout << "letra: " << nomeTemp[letras-1] << endl;
+			letras++;
+		}
+	}
+
+	nomeFinal = (char*)malloc((letras-1));
+	
+	for (int k = 0; k < letras - 1; k++)
+		nomeFinal[k] = nomeTemp[k];
+
+	cout << "\nNome sugerido: " << nomeFinal << endl;
+
+	free(nomeTemp);
+	free(nomeFinal);
 
 	//Regra 02
 }
@@ -78,7 +97,6 @@ void verificaNome() {
 		listaDiretorio();
 		cout << "\nInforme o nome do arquivo: ";
 		cin.ignore(); getline(cin, nomeArquivo);
-		cout << "\nArquivo informado: " << nomeArquivo << endl;
 		regrasNomeArquivo(nomeArquivo);
 	}
 }
@@ -108,4 +126,6 @@ void main() {
 	case 4: verificaNome(); break;
 	case 5: break;
 	}
+
+	cout << "\n\n";
 }
