@@ -11,11 +11,11 @@
 
 using namespace std;
 
-void saida() {
+void saida(int n) {
 	system("cls");
 	cout << "Obrigado por utilizar nosso sistema." << endl;
 	cout << "Duvidas ou Sugestoes? Envie email para: lennonalvesdias@gmail.com\n" << endl;
-	exit(0);
+	exit(n);
 }
 
 void regrasNomeArquivo(string nomeArquivo) {
@@ -23,28 +23,44 @@ void regrasNomeArquivo(string nomeArquivo) {
 	cout << "Arquivo informado: " << nomeArquivo << endl;
 	cout << "\nRegra 01: Nome com espacos" << endl;
 	cout << "Regra 02: Nome com caracteres especiais" << endl;
-	int letras = 1; char *nomeTemp = NULL, *nomeFinal;
+	int letras = 1, noespace = 0; char *nomeTemp = NULL;
 
 	//Regra 01
-	for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it) {
-		if (*it != *" ") {
-			//cout << "letra: " << *it << endl;
-			nomeTemp = (char*)realloc(nomeTemp, letras * sizeof(char));
-			nomeTemp[letras-1] = *it;
-			//cout << "letra: " << nomeTemp[letras-1] << endl;
-			letras++;
+	if (nomeArquivo.find(".txt") > nomeArquivo.length()) { //trabalhos futuros: comprar com lista de extensões
+		cout << "\nArquivo sem extensao e possui risco de ser corrompido." << endl; system("pause"); saida(1);
+	}
+	else if (nomeArquivo.find(" ") > nomeArquivo.length()) { //não possui espaço
+		cout << "\nO arquivo informado segue a Regra 01" << endl; system("pause"); saida(1);
+	}
+	else {
+		for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it) {
+			if (*it != *" ") {
+				//cout << "letra: " << *it << endl;
+				nomeTemp = (char*)realloc(nomeTemp, letras * sizeof(char));
+				if (nomeTemp == NULL) saida(1);
+				nomeTemp[letras - 1] = *it;
+				//cout << "letra: " << nomeTemp[letras-1] << endl;
+				letras++;
+			}
 		}
+		char *nomeFinal = (char*)malloc(letras);
+		if (nomeFinal == NULL) saida(1);
+
+		for (int k = 0; k < letras - 1; k++)
+			nomeFinal[k] = nomeTemp[k];
+		nomeFinal[letras - 1] = '\0';
+
+		cout << "\nNome sugerido: " << nomeFinal << endl;
+
+		string comando = "ren \"" + nomeArquivo + "\" \"" + nomeFinal + "\"";
+		system(comando.c_str());
+
+		if (nomeFinal != NULL)
+			free(nomeFinal);
 	}
 
-	nomeFinal = (char*)malloc((letras-1));
-	
-	for (int k = 0; k < letras - 1; k++)
-		nomeFinal[k] = nomeTemp[k];
-
-	cout << "\nNome sugerido: " << nomeFinal << endl;
-
+	if (nomeTemp != NULL)
 	free(nomeTemp);
-	free(nomeFinal);
 
 	//Regra 02
 }
@@ -89,7 +105,7 @@ void verificaNome() {
 	cout << "[0] Sair\n" << endl;
 	cin.ignore(); cin >> menu;
 
-	if (menu != 1 && menu != 2) saida();
+	if (menu != 1 && menu != 2) saida(0);
 	else if (menu == 1) {
 		cout << "\nVerificando todos os arquivos." << endl;
 	}
@@ -119,7 +135,7 @@ void main() {
 
 	menu = loop(menu);
 	switch (menu) {
-	case 0: saida(); break;
+	case 0: saida(0); break;
 	case 1: break;
 	case 2: break;
 	case 3: break;
@@ -127,5 +143,5 @@ void main() {
 	case 5: break;
 	}
 
-	cout << "\n\n";
+	cout << "\n";
 }
