@@ -23,25 +23,29 @@ void regrasNomeArquivo(string nomeArquivo) {
 	cout << "Arquivo informado: " << nomeArquivo << endl;
 	cout << "\nRegra 01: Nome com espacos" << endl;
 	cout << "Regra 02: Nome com caracteres especiais" << endl;
-	int letras = 1, noespace = 0; char *nomeTemp = NULL;
 
 	//Regra 01
-	if (nomeArquivo.find(".txt") > nomeArquivo.length()) { //trabalhos futuros: comprar com lista de extensões
+	if (nomeArquivo.find(".txt") > nomeArquivo.length()) { //trabalhos futuros: comparar com lista de extensões
 		cout << "\nArquivo sem extensao e possui risco de ser corrompido." << endl; system("pause"); saida(1);
 	}
-	else if (nomeArquivo.find(" ") > nomeArquivo.length()) { //não possui espaço
-		cout << "\nO arquivo informado segue a Regra 01" << endl; system("pause"); saida(1);
+	else if (nomeArquivo.find(32) > nomeArquivo.length()) { //não possui espaço
+		cout << "\nO arquivo informado segue a Regra 01" << endl;
 	}
 	else {
+		char *nomeTemp = NULL; int letras = 1, flag = 0;
 		for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it) {
-			if (*it != *" ") {
-				//cout << "letra: " << *it << endl;
+			if (*it != 32) {
 				nomeTemp = (char*)realloc(nomeTemp, letras * sizeof(char));
 				if (nomeTemp == NULL) saida(1);
+				if (flag == 1)
+					if (*it > 90)
+						*it -= 32;
 				nomeTemp[letras - 1] = *it;
-				//cout << "letra: " << nomeTemp[letras-1] << endl;
 				letras++;
+				flag = 0;
 			}
+			else
+				flag = 1; //encontrou espaço
 		}
 		char *nomeFinal = (char*)malloc(letras);
 		if (nomeFinal == NULL) saida(1);
@@ -55,14 +59,52 @@ void regrasNomeArquivo(string nomeArquivo) {
 		string comando = "ren \"" + nomeArquivo + "\" \"" + nomeFinal + "\"";
 		system(comando.c_str());
 
-		if (nomeFinal != NULL)
-			free(nomeFinal);
+		nomeArquivo = nomeFinal;
+		free(nomeFinal);
+		free(nomeTemp);
 	}
 
-	if (nomeTemp != NULL)
-	free(nomeTemp);
-
 	//Regra 02
+	if ((nomeArquivo.find(33) > nomeArquivo.length()) && (nomeArquivo.find(34) > nomeArquivo.length())
+		&& (nomeArquivo.find(35) > nomeArquivo.length()) && (nomeArquivo.find(36) > nomeArquivo.length())
+		&& (nomeArquivo.find(37) > nomeArquivo.length()) && (nomeArquivo.find(38) > nomeArquivo.length())
+		&& (nomeArquivo.find(39) > nomeArquivo.length()) && (nomeArquivo.find(40) > nomeArquivo.length())
+		&& (nomeArquivo.find(41) > nomeArquivo.length()) && (nomeArquivo.find(42) > nomeArquivo.length())
+		&& (nomeArquivo.find(43) > nomeArquivo.length()) && (nomeArquivo.find(44) > nomeArquivo.length())
+		&& (nomeArquivo.find(47) > nomeArquivo.length()) && (nomeArquivo.find(58) > nomeArquivo.length())
+		&& (nomeArquivo.find(60) > nomeArquivo.length()) && (nomeArquivo.find(61) > nomeArquivo.length())
+		&& (nomeArquivo.find(62) > nomeArquivo.length()) && (nomeArquivo.find(63) > nomeArquivo.length())
+		&& (nomeArquivo.find(64) > nomeArquivo.length())) {
+		cout << "\nO arquivo informado segue a Regra 02" << endl;
+	}
+	else {
+		char *nomeTemp = NULL; int letras = 1;
+		for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it) {
+			if (*it != 33 && *it != 34 && *it != 35 && *it != 36 && *it != 37 && *it != 38 && *it != 39
+				&& *it != 40 && *it != 41 && *it != 42 && *it != 43 && *it != 44 && *it != 47 && *it != 58
+				&& *it != 60 && *it != 61 && *it != 62 && *it != 63 && *it != 64) {
+				nomeTemp = (char*)realloc(nomeTemp, letras * sizeof(char));
+				if (nomeTemp == NULL) saida(1);
+				nomeTemp[letras - 1] = *it;
+				letras++;
+			}
+		}
+		char* nomeFinal = (char*)malloc(letras);
+		if (nomeFinal == NULL) saida(1);
+
+		for (int k = 0; k < letras - 1; k++)
+			nomeFinal[k] = nomeTemp[k];
+		nomeFinal[letras - 1] = '\0';
+
+		cout << "\nNome sugerido: " << nomeFinal << endl;
+
+		string comando = "ren \"" + nomeArquivo + "\" \"" + nomeFinal + "\"";
+		system(comando.c_str());
+
+		nomeArquivo = nomeFinal;
+		free(nomeFinal);
+		free(nomeTemp);
+	}
 }
 
 void listaDiretorio() {
