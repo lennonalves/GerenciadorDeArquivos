@@ -9,9 +9,7 @@ Insira o executável na pasta em que deseja gerenciar
 ## Usage
 
 1. Inicie o instalador na pasta em que deseja gerenciar
-2. Siga as instruções da tela
-2.1. Você pode guiar o gerenciamento
-2.2. Ou deixar todo o trabalho com a gente :)
+2. Siga as instruções da tela. Você pode guiar o gerenciamento ou deixar todo o trabalho com a gente :)
 
 ## Contributing
 
