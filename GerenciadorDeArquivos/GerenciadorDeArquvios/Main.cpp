@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <sys/types.h>
 #include "dirent.h"
@@ -21,31 +22,72 @@ void saida(int n) {
 void regrasNomeArquivo(string nomeArquivo) {
 	system("cls");
 	cout << "Arquivo informado: " << nomeArquivo << endl;
-	cout << "\nRegra 01: Nome com espacos" << endl;
-	cout << "Regra 02: Nome com caracteres especiais" << endl;
+
+	vector<string> extensoes;
+	bool regra;
+
+	//win
+	extensoes.push_back(".txt"); extensoes.push_back(".exe");
+	extensoes.push_back(".zip"); extensoes.push_back(".rar");
+
+	//office
+	extensoes.push_back(".doc"); extensoes.push_back(".docx"); 
+	extensoes.push_back(".docm"); extensoes.push_back(".dotx");
+	extensoes.push_back(".dotm"); extensoes.push_back(".ppt");
+	extensoes.push_back(".pptx"); extensoes.push_back(".pptm");
+	extensoes.push_back(".potx"); extensoes.push_back(".potm"); 
+	extensoes.push_back(".ppam"); extensoes.push_back(".ppsx");
+	extensoes.push_back(".ppsm"); extensoes.push_back(".sldx");
+	extensoes.push_back(".sldm"); extensoes.push_back(".thmx");
+	extensoes.push_back(".xls"); extensoes.push_back(".xlsm");
+	extensoes.push_back(".xlsx"); extensoes.push_back(".xltx");
+	extensoes.push_back(".xltm"); extensoes.push_back(".xlsb");
+	extensoes.push_back(".xlam");
+
+	//imagem
+	extensoes.push_back(".bmp"); extensoes.push_back(".jpg"); 
+	extensoes.push_back(".jpeg"); extensoes.push_back(".png");
+	extensoes.push_back(".tiff"); extensoes.push_back(".gif");
+	extensoes.push_back(".ico");
+
+	extensoes.push_back(".psd"); extensoes.push_back(".cdr");
+
+	//multimidia
+	extensoes.push_back(".mp3"); extensoes.push_back(".mp4");
+	extensoes.push_back(".wav"); extensoes.push_back(".mpeg");
+	extensoes.push_back(".avi"); extensoes.push_back(".wmv");
 
 	//Regra 01
-	if (nomeArquivo.find(".txt") > nomeArquivo.length()) { //trabalhos futuros: comparar com lista de extensões
-		cout << "\nArquivo sem extensao e possui risco de ser corrompido." << endl; system("pause"); saida(1);
+	regra = false;
+	for (unsigned int i = 0; i < extensoes.size(); ++i)
+		if (nomeArquivo.find(extensoes[i]) < nomeArquivo.length())
+			regra = true;
+
+	if (regra == false) {
+		cout << "\nArquivo sem extensao e possui risco de ser corrompido." << endl;
+		system("pause");
+		saida(1);
 	}
-	else if (nomeArquivo.find(32) > nomeArquivo.length()) { //não possui espaço
-		cout << "\nO arquivo informado segue a Regra 01" << endl;
+	
+	if (nomeArquivo.find(32) > nomeArquivo.length()) { //não possui espaço
+		cout << "\nO arquivo informado nao possui espacos" << endl;
 	}
 	else {
-		char *nomeTemp = NULL; int letras = 1, flag = 0;
+		char *nomeTemp = NULL; int letras = 1; bool espaco = false;
 		for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it) {
-			if (*it != 32) {
+			if (*it != 32) { //verifica espaço
+				//cout << "letter: " << *it << endl;
 				nomeTemp = (char*)realloc(nomeTemp, letras * sizeof(char));
 				if (nomeTemp == NULL) saida(1);
-				if (flag == 1)
+				if (espaco == true)
 					if (*it > 90)
 						*it -= 32;
 				nomeTemp[letras - 1] = *it;
 				letras++;
-				flag = 0;
+				espaco = false;
 			}
 			else
-				flag = 1; //encontrou espaço
+				espaco = true;
 		}
 		char *nomeFinal = (char*)malloc(letras);
 		if (nomeFinal == NULL) saida(1);
@@ -54,6 +96,7 @@ void regrasNomeArquivo(string nomeArquivo) {
 			nomeFinal[k] = nomeTemp[k];
 		nomeFinal[letras - 1] = '\0';
 
+		cout << "\nRegra 01: Nome com espacos." << endl;
 		cout << "\nNome sugerido: " << nomeFinal << endl;
 
 		string comando = "ren \"" + nomeArquivo + "\" \"" + nomeFinal + "\"";
@@ -64,25 +107,41 @@ void regrasNomeArquivo(string nomeArquivo) {
 		free(nomeTemp);
 	}
 
+	vector<int> especiais;
+
+	for (int n = 33; n <= 44; n++)
+		especiais.push_back(n);
+	for (int n = 60; n <= 64; n++)
+		especiais.push_back(n);
+	for (int n = 91; n <= 94; n++)
+		especiais.push_back(n);
+	for (int n = 155; n <= 159; n++)
+		especiais.push_back(n);
+	for (int n = 166; n <= 180; n++)
+		especiais.push_back(n);
+
+	especiais.push_back(47); especiais.push_back(58); especiais.push_back(96);
+	especiais.push_back(126); especiais.push_back(145); especiais.push_back(184);	
+
 	//Regra 02
-	if ((nomeArquivo.find(33) > nomeArquivo.length()) && (nomeArquivo.find(34) > nomeArquivo.length())
-		&& (nomeArquivo.find(35) > nomeArquivo.length()) && (nomeArquivo.find(36) > nomeArquivo.length())
-		&& (nomeArquivo.find(37) > nomeArquivo.length()) && (nomeArquivo.find(38) > nomeArquivo.length())
-		&& (nomeArquivo.find(39) > nomeArquivo.length()) && (nomeArquivo.find(40) > nomeArquivo.length())
-		&& (nomeArquivo.find(41) > nomeArquivo.length()) && (nomeArquivo.find(42) > nomeArquivo.length())
-		&& (nomeArquivo.find(43) > nomeArquivo.length()) && (nomeArquivo.find(44) > nomeArquivo.length())
-		&& (nomeArquivo.find(47) > nomeArquivo.length()) && (nomeArquivo.find(58) > nomeArquivo.length())
-		&& (nomeArquivo.find(60) > nomeArquivo.length()) && (nomeArquivo.find(61) > nomeArquivo.length())
-		&& (nomeArquivo.find(62) > nomeArquivo.length()) && (nomeArquivo.find(63) > nomeArquivo.length())
-		&& (nomeArquivo.find(64) > nomeArquivo.length())) {
-		cout << "\nO arquivo informado segue a Regra 02" << endl;
+	regra = false;
+	for (unsigned int i = 0; i < especiais.size(); ++i)
+		if (nomeArquivo.find(especiais[i]) < nomeArquivo.length())
+			regra = true;
+
+	if (regra == false) {
+		cout << "\nO arquivo informado nao possui caracteres especiais." << endl;
 	}
 	else {
 		char *nomeTemp = NULL; int letras = 1;
 		for (string::iterator it = nomeArquivo.begin(); it != nomeArquivo.end(); ++it) {
-			if (*it != 33 && *it != 34 && *it != 35 && *it != 36 && *it != 37 && *it != 38 && *it != 39
-				&& *it != 40 && *it != 41 && *it != 42 && *it != 43 && *it != 44 && *it != 47 && *it != 58
-				&& *it != 60 && *it != 61 && *it != 62 && *it != 63 && *it != 64) {
+			bool caractere = false;
+			for (unsigned int k = 0; k < especiais.size(); ++k)
+				if (*it == especiais[k])
+					caractere = true;
+			if (caractere == false)
+			{
+				//cout << "letter: " << *it << endl;
 				nomeTemp = (char*)realloc(nomeTemp, letras * sizeof(char));
 				if (nomeTemp == NULL) saida(1);
 				nomeTemp[letras - 1] = *it;
@@ -96,6 +155,7 @@ void regrasNomeArquivo(string nomeArquivo) {
 			nomeFinal[k] = nomeTemp[k];
 		nomeFinal[letras - 1] = '\0';
 
+		cout << "Regra 02: Nome com caracteres especiais." << endl;
 		cout << "\nNome sugerido: " << nomeFinal << endl;
 
 		string comando = "ren \"" + nomeArquivo + "\" \"" + nomeFinal + "\"";
@@ -127,7 +187,7 @@ void listaDiretorio() {
 
 void verificaNome() {
 	system("cls");
-	cout << "[4] Verificar nome do arquivo\n" << endl;
+	cout << "[4] Verificar nome do arquivo.\n" << endl;
 
 	/*
 	FILE	*arquivoEntrada, *arquivoSaida;
